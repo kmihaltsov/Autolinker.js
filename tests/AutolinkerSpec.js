@@ -1084,24 +1084,22 @@ describe( "Autolinker", function() {
 
 			it( "should automatically link an in-country phone number", function() {
 				expect( autolinker.link( "(555)666-7777" ) ).toBe( '<a href="tel:5556667777">(555)666-7777</a>' );
-				expect( autolinker.link( "(555) 666-7777" ) ).toBe( '<a href="tel:5556667777">(555) 666-7777</a>' );
+				expect( autolinker.link( "(555)666-7777" ) ).toBe( '<a href="tel:5556667777">(555)666-7777</a>' );
 				expect( autolinker.link( "555-666-7777" ) ).toBe( '<a href="tel:5556667777">555-666-7777</a>' );
-				expect( autolinker.link( "555 666 7777" ) ).toBe( '<a href="tel:5556667777">555 666 7777</a>' );
-				expect( autolinker.link( "555.666.7777" ) ).toBe( '<a href="tel:5556667777">555.666.7777</a>' );
+				expect( autolinker.link( "5556667777" ) ).toBe( '<a href="tel:5556667777">5556667777</a>' );
 			} );
 
 
 			it( "should automatically link an international phone number", function() {
 				expect( autolinker.link( "+1-541-754-3010" ) ).toBe(  '<a href="tel:+15417543010">+1-541-754-3010</a>' );
 				expect( autolinker.link( "1-541-754-3010" ) ).toBe(   '<a href="tel:15417543010">1-541-754-3010</a>' );
-				expect( autolinker.link( "1 (541) 754-3010" ) ).toBe( '<a href="tel:15417543010">1 (541) 754-3010</a>' );
-				expect( autolinker.link( "1.541.754.3010" ) ).toBe(   '<a href="tel:15417543010">1.541.754.3010</a>' );
+				expect( autolinker.link( "1(541)754-3010" ) ).toBe( '<a href="tel:15417543010">1(541)754-3010</a>' );
 			} );
 
 
 			it( "should automatically link a phone number that is completely surrounded by parenthesis", function() {
-				var result = autolinker.link( "((555) 666-7777)" );
-				expect( result ).toBe( '(<a href="tel:5556667777">(555) 666-7777</a>)' );
+				var result = autolinker.link( "((555)666-7777)" );
+				expect( result ).toBe( '<a href="tel:5556667777">((555)666-7777)</a>' );
 			} );
 
 
@@ -1113,32 +1111,20 @@ describe( "Autolinker", function() {
 
 			it( "should automatically link a phone number surrounded by parenthesis contained in a larger string", function() {
 				var result = autolinker.link( "Here's my number ((555)666-7777), so call me maybe?" );
-				expect( result ).toBe( 'Here\'s my number (<a href=\"tel:5556667777\">(555)666-7777</a>), so call me maybe?' );
+				expect( result ).toBe( 'Here\'s my number <a href=\"tel:5556667777\">((555)666-7777)</a>, so call me maybe?' );
 			} );
 
 
-			it( "should NOT automatically link a phone number when there are no delimiters, since we don't know for sure if this is a phone number or some other number", function() {
-				expect( autolinker.link( "5556667777" ) ).toBe( '5556667777' );
-				expect( autolinker.link( "15417543010" ) ).toBe( '15417543010' );
+			it( "should automatically link a phone number when there are no delimiters, since we don't know for sure if this is a phone number or some other number", function() {
+				expect( autolinker.link( '5556667777' ) ).toBe( '<a href="tel:5556667777">5556667777</a>' );
+				expect( autolinker.link( '15417543010' ) ).toBe( '<a href="tel:15417543010">15417543010</a>' );
 			} );
 
 			it( "should NOT automatically link numbers when there are non-space empty characters (such as newlines) in between", function() {
-				expect( autolinker.link( "555 666  7777" ) ).toBe( '555 666  7777' );
-				expect( autolinker.link( "555	666 7777" ) ).toBe( '555	666 7777' );
-				expect( autolinker.link( "555\n666 7777" ) ).toBe( '555\n666 7777' );
+				expect( autolinker.link( "666  777" ) ).toBe( '666  777' );
+				expect( autolinker.link( "555	666" ) ).toBe( '555	666' );
+				expect( autolinker.link( "555\n666" ) ).toBe( '555\n666' );
 			} );
-            it( "should automatically link numbers when there are extensions with ,<numbers>#", function() {
-                expect( autolinker.link( "555 666 7777,234523#,23453#" ) ).toBe( '<a href="tel:5556667777,234523#,23453#">555 666 7777,234523#,23453#</a>' );
-                expect( autolinker.link( "1-555-666-7777,234523#" ) ).toBe( '<a href="tel:15556667777,234523#">1-555-666-7777,234523#</a>' );
-                expect( autolinker.link( "+1-555-666-7777,234523#" ) ).toBe( '<a href="tel:+15556667777,234523#">+1-555-666-7777,234523#</a>' );
-                expect( autolinker.link( "+1-555-666-7777,234523,233" ) ).toBe( '<a href="tel:+15556667777,234523,233">+1-555-666-7777,234523,233</a>' );
-                expect( autolinker.link( "+22016350659,;,55#;;234   ,  3334443323" ) ).toBe( '<a href="tel:+22016350659,;,55#;;234">+22016350659,;,55#;;234</a>   ,  3334443323' );                
-            } );
-            it( "should NOT automatically link numbers when there are extensions with ,<numbers># followed by a number", function() {
-                expect( autolinker.link( "+1-555-666-7777,234523#233" ) ).toBe( '+1-555-666-7777,234523#233' );
-                expect( autolinker.link( "+1-555-666-7777,234523#abc" ) ).toBe( '<a href="tel:+15556667777,234523#">+1-555-666-7777,234523#</a>abc' );
-                expect( autolinker.link( "+1-555-666-7777,234523#,234523#abc" ) ).toBe( '<a href="tel:+15556667777,234523#,234523#">+1-555-666-7777,234523#,234523#</a>abc' );                
-            } );
 		} );
 
 
@@ -1510,7 +1496,7 @@ describe( "Autolinker", function() {
 			function() {
 				var result = autolinker.link(
 					'<US_Con_SL_RTNS@dell.com\n' +
-					'He gave me a 1-800 customer care number that I\'ve called twice.  The last time I called, about 3 weeks ago, the customer rep said he would request an expedited response. He gave me a reference number which is  925767619. Thankyou very much for looking into this.\n' +
+					'He gave me a 1-800 customer care number that I\'ve called twice.  The last time I called, about 3 weeks ago, the customer rep said he would request an expedited response. He gave me a reference number which is 925767619. Thankyou very much for looking into this.\n' +
 					'\n' +
 					'Ronald D Brigham\n' +
 					'brigham@mtnhome.com'
@@ -1518,7 +1504,7 @@ describe( "Autolinker", function() {
 
 				expect( result ).toBe( [
 					'<<a href="mailto:US_Con_SL_RTNS@dell.com">US_Con_SL_RTNS@dell.com</a>',
-					'He gave me a 1-800 customer care number that I\'ve called twice.  The last time I called, about 3 weeks ago, the customer rep said he would request an expedited response. He gave me a reference number which is  925767619. Thankyou very much for looking into this.',
+					'He gave me a <a href="tel:1800">1-800</a> customer care number that I\'ve called twice.  The last time I called, about 3 weeks ago, the customer rep said he would request an expedited response. He gave me a reference number which is <a href="tel:925767619">925767619</a>. Thankyou very much for looking into this.',
 					'',
 					'Ronald D Brigham',
 					'<a href="mailto:brigham@mtnhome.com">brigham@mtnhome.com</a>'
@@ -2176,7 +2162,7 @@ describe( "Autolinker", function() {
 			var inputStr = [
 				"Website: asdf.com",
 				"Email: asdf@asdf.com",
-				"Phone: (123) 456-7890",
+				"Phone: (123)456-7890",
 				"Mention: @asdf",
 				"Hashtag: #asdf"
 			].join( ", " );
@@ -2191,7 +2177,7 @@ describe( "Autolinker", function() {
 				expect( result ).toBe( [
 					'Website: <a href="http://asdf.com">asdf.com</a>',
 					'Email: <a href="mailto:asdf@asdf.com">asdf@asdf.com</a>',
-					'Phone: <a href="tel:1234567890">(123) 456-7890</a>',
+					'Phone: <a href="tel:1234567890">(123)456-7890</a>',
 					'Mention: <a href="https://twitter.com/asdf">@asdf</a>',
 					'Hashtag: <a href="https://twitter.com/hashtag/asdf">#asdf</a>'
 				].join( ", " ) );
@@ -2203,7 +2189,7 @@ describe( "Autolinker", function() {
 				expect( result ).toBe( [
 					'Website: <a href="http://asdf.com">asdf.com</a>',
 					'Email: <a href="mailto:asdf@asdf.com">asdf@asdf.com</a>',
-					'Phone: <a href="tel:1234567890">(123) 456-7890</a>',
+					'Phone: <a href="tel:1234567890">(123)456-7890</a>',
 					'Mention: <a href="https://twitter.com/asdf">@asdf</a>',
 					'Hashtag: <a href="https://twitter.com/hashtag/asdf">#asdf</a>'
 				].join( ", " ) );
@@ -2212,7 +2198,7 @@ describe( "Autolinker", function() {
 				expect( result ).toBe( [
 					'Website: <a href="http://asdf.com">asdf.com</a>',
 					'Email: <a href="mailto:asdf@asdf.com">asdf@asdf.com</a>',
-					'Phone: <a href="tel:1234567890">(123) 456-7890</a>',
+					'Phone: <a href="tel:1234567890">(123)456-7890</a>',
 					'Mention: <a href="https://instagram.com/asdf">@asdf</a>',
 					'Hashtag: <a href="https://twitter.com/hashtag/asdf">#asdf</a>'
 				].join( ", " ) );
@@ -2224,7 +2210,7 @@ describe( "Autolinker", function() {
 				expect( result ).toBe( [
 					'Website: <a href="http://asdf.com">asdf.com</a>',
 					'Email: <a href="mailto:asdf@asdf.com">asdf@asdf.com</a>',
-					'Phone: <a href="tel:1234567890">(123) 456-7890</a>',
+					'Phone: <a href="tel:1234567890">(123)456-7890</a>',
 					'Mention: <a href="https://twitter.com/asdf">@asdf</a>',
 					'Hashtag: <a href="https://twitter.com/hashtag/asdf">#asdf</a>'
 				].join( ", " ) );
@@ -2233,7 +2219,7 @@ describe( "Autolinker", function() {
 				expect( result ).toBe( [
 					'Website: <a href="http://asdf.com">asdf.com</a>',
 					'Email: <a href="mailto:asdf@asdf.com">asdf@asdf.com</a>',
-					'Phone: <a href="tel:1234567890">(123) 456-7890</a>',
+					'Phone: <a href="tel:1234567890">(123)456-7890</a>',
 					'Mention: <a href="https://instagram.com/asdf">@asdf</a>',
 					'Hashtag: <a href="https://twitter.com/hashtag/asdf">#asdf</a>'
 				].join( ", " ) );
@@ -2251,7 +2237,7 @@ describe( "Autolinker", function() {
 				expect( result ).toBe( [
 					'Website: asdf.com',
 					'Email: <a href="mailto:asdf@asdf.com">asdf@asdf.com</a>',
-					'Phone: <a href="tel:1234567890">(123) 456-7890</a>',
+					'Phone: <a href="tel:1234567890">(123)456-7890</a>',
 					'Mention: <a href="https://twitter.com/asdf">@asdf</a>',
 					'Hashtag: <a href="https://twitter.com/hashtag/asdf">#asdf</a>'
 				].join( ", " ) );
@@ -2269,7 +2255,7 @@ describe( "Autolinker", function() {
 				expect( result ).toBe( [
 					'Website: <a href="http://asdf.com">asdf.com</a>',
 					'Email: asdf@asdf.com',
-					'Phone: <a href="tel:1234567890">(123) 456-7890</a>',
+					'Phone: <a href="tel:1234567890">(123)456-7890</a>',
 					'Mention: <a href="https://twitter.com/asdf">@asdf</a>',
 					'Hashtag: <a href="https://twitter.com/hashtag/asdf">#asdf</a>'
 				].join( ", " ) );
@@ -2287,7 +2273,7 @@ describe( "Autolinker", function() {
 				expect( result ).toBe( [
 					'Website: <a href="http://asdf.com">asdf.com</a>',
 					'Email: <a href="mailto:asdf@asdf.com">asdf@asdf.com</a>',
-					'Phone: (123) 456-7890',
+					'Phone: (123)456-7890',
 					'Mention: <a href="https://twitter.com/asdf">@asdf</a>',
 					'Hashtag: <a href="https://twitter.com/hashtag/asdf">#asdf</a>'
 				].join( ", " ) );
@@ -2304,7 +2290,7 @@ describe( "Autolinker", function() {
 				expect( result ).toBe( [
 					'Website: <a href="http://asdf.com">asdf.com</a>',
 					'Email: <a href="mailto:asdf@asdf.com">asdf@asdf.com</a>',
-					'Phone: <a href="tel:1234567890">(123) 456-7890</a>',
+					'Phone: <a href="tel:1234567890">(123)456-7890</a>',
 					'Mention: @asdf',
 					'Hashtag: <a href="https://twitter.com/hashtag/asdf">#asdf</a>'
 				].join( ", " ) );
@@ -2321,7 +2307,7 @@ describe( "Autolinker", function() {
 				expect( result ).toBe( [
 					'Website: <a href="http://asdf.com">asdf.com</a>',
 					'Email: <a href="mailto:asdf@asdf.com">asdf@asdf.com</a>',
-					'Phone: <a href="tel:1234567890">(123) 456-7890</a>',
+					'Phone: <a href="tel:1234567890">(123)456-7890</a>',
 					'Mention: <a href="https://twitter.com/asdf">@asdf</a>',
 					'Hashtag: #asdf'
 				].join( ", " ) );
@@ -2733,7 +2719,7 @@ describe( "Autolinker", function() {
 			var text = [
 				'Website: asdf.com',
 				'Email: asdf@asdf.com',
-				'Phone: (123) 456-7890',
+				'Phone: (123)456-7890',
 				'Mention: @asdf1',
 				'Hashtag: #asdf2'
 			].join( ' ' );
@@ -2761,52 +2747,6 @@ describe( "Autolinker", function() {
 			expect( matches[ 4 ].getHashtag() ).toBe( 'asdf2' );
 		} );
 
-		describe( 'custom Phone.prototype.matcherRegex', function() {
-			const matcherRegexOriginal = Autolinker.matcher.Phone.prototype.matcherRegex;
-
-			beforeEach( function() {
-				const phoneInTextRegex = /(\+?852\-?)?[569]\d{3}\-?\d{4}/g;
-				Autolinker.matcher.Phone.prototype.matcherRegex = phoneInTextRegex;
-				Autolinker.matcher.Phone.prototype.testMatch = function() { return true; };
-			} );
-
-			afterEach( function() {
-				Autolinker.matcher.Phone.prototype.matcherRegex = matcherRegexOriginal;
-			} );
-
-			it( 'should match custom matcherRegex', function() {
-				var text = [
-					'91234567',
-					'9123-4567',
-					'61234567',
-					'51234567',
-					'+85291234567',
-					'+852-91234567',
-					'+852-9123-4567',
-					'852-91234567',
-					// invalid
-					'999',
-					'+852-912345678',
-					'123456789',
-					'+852-1234-56789',
-				].join( ' / ' );
-
-				var matches = Autolinker.parse( text, {
-					hashtag : 'twitter',
-					mention : 'twitter'
-				} );
-
-				expect( matches.length ).toBe( 9 );
-
-				expect( matches[ 0 ].getType() ).toBe( 'phone' );
-				expect( matches[ 0 ].getNumber() ).toBe( '91234567' );
-
-				expect( matches[ 2 ].getType() ).toBe( 'phone' );
-				expect( matches[ 2 ].getNumber() ).toBe( '61234567' );
-			} );
-
-		} );
-
 	} );
 
 
@@ -2822,7 +2762,7 @@ describe( "Autolinker", function() {
 			var text = [
 				'Website: asdf.com',
 				'Email: asdf@asdf.com',
-				'Phone: (123) 456-7890',
+				'Phone: (123)456-7890',
 				'Mention: @asdf1',
 				'Hashtag: #asdf2'
 			].join( ' ' );
