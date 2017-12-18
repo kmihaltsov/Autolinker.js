@@ -1496,7 +1496,7 @@ describe( "Autolinker", function() {
 			function() {
 				var result = autolinker.link(
 					'<US_Con_SL_RTNS@dell.com\n' +
-					'He gave me a 1-800 customer care number that I\'ve called twice.  The last time I called, about 3 weeks ago, the customer rep said he would request an expedited response. He gave me a reference number which is 925767619. Thankyou very much for looking into this.\n' +
+					'He gave me a 1-800 customer care number that I\'ve called twice.  The last time I called, about 3 weeks ago, the customer rep said he would request an expedited response. He gave me a reference number which is 825767619. Thankyou very much for looking into this.\n' +
 					'\n' +
 					'Ronald D Brigham\n' +
 					'brigham@mtnhome.com'
@@ -1504,7 +1504,7 @@ describe( "Autolinker", function() {
 
 				expect( result ).toBe( [
 					'<<a href="mailto:US_Con_SL_RTNS@dell.com">US_Con_SL_RTNS@dell.com</a>',
-					'He gave me a <a href="tel:1800">1-800</a> customer care number that I\'ve called twice.  The last time I called, about 3 weeks ago, the customer rep said he would request an expedited response. He gave me a reference number which is <a href="tel:925767619">925767619</a>. Thankyou very much for looking into this.',
+					'He gave me a <a href="tel:1800">1-800</a> customer care number that I\'ve called twice.  The last time I called, about 3 weeks ago, the customer rep said he would request an expedited response. He gave me a reference number which is <a href="tel:825767619">825767619</a>. Thankyou very much for looking into this.',
 					'',
 					'Ronald D Brigham',
 					'<a href="mailto:brigham@mtnhome.com">brigham@mtnhome.com</a>'

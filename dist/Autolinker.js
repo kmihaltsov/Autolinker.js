@@ -3406,7 +3406,7 @@ Autolinker.matcher.Phone = Autolinker.Util.extend( Autolinker.matcher.Matcher, {
 	 * @property {RegExp} matcherRegex
 	 */
     matcherRegex : /(\s|^|[^\d][,.])(\(?(\+)?(?:[\/\-() ]?\d){4,}(?:\))?)(?=[,.][^\d]|\.$|\s|$)/g,
-    
+
 	/**
 	 * @inheritdoc
 	 */
@@ -3422,18 +3422,23 @@ Autolinker.matcher.Phone = Autolinker.Util.extend( Autolinker.matcher.Matcher, {
 				matchedText = match[2],
 				cleanNumber = matchedText.replace(/[^0-9]/g, ''), // strip out non-digit characters
 				plusSign = !!match[3]; // match[ 1 ] is the prefixed plus sign, if there is one
-
-			matches.push(new Autolinker.match.Phone({
-				tagBuilder: tagBuilder,
-				matchedText: matchedText,
-				offset: match.index + indexOffset,
-				number: cleanNumber,
-				plusSign: plusSign
-			}));
+			if (!this.testExcludePatterns(matchedText)) {
+				matches.push(new Autolinker.match.Phone({
+					tagBuilder: tagBuilder,
+					matchedText: matchedText,
+					offset: match.index + indexOffset,
+					number: cleanNumber,
+					plusSign: plusSign
+				}));
+			}
 		}
 
 		return matches;
 	},
+
+	testExcludePatterns: function(text) {
+		return /(?:^|\D)\d{4}\/\d{4}(?:$|\D)/.test(text) || /(?:^|\D)9\d{8}(?:$|\D)/.test(text);
+	}
 
 } );
 

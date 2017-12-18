@@ -90,17 +90,17 @@ describe("Autolinker.matcher.Phone", function () {
 
 		it('should return an array of multiple phone numbers when there are more than one within the string', function () {
 			var matches = matcher.parseMatches('123456 +37529572638 +123125\n' +
-				'asdsa asdas: 1231/1231\n' +
+				'asdsa asdas: 1231/12345\n' +
 				'12312,123 12312.123 a13213 12312 +555555  1111 11 11');
 
 			expect(matches.length).toBe(7);
 			MatchChecker.expectPhoneMatch(matches[0], '123456', 0);
 			MatchChecker.expectPhoneMatch(matches[1], '37529572638', 7);
 			MatchChecker.expectPhoneMatch(matches[2], '123125', 20);
-			MatchChecker.expectPhoneMatch(matches[3], '12311231', 41);
-			MatchChecker.expectPhoneMatch(matches[4], '12312', 78);
-			MatchChecker.expectPhoneMatch(matches[5], '555555', 84);
-			MatchChecker.expectPhoneMatch(matches[6], '11111111', 92);
+			MatchChecker.expectPhoneMatch(matches[3], '123112345', 41);
+			MatchChecker.expectPhoneMatch(matches[4], '12312', 79);
+			MatchChecker.expectPhoneMatch(matches[5], '555555', 85);
+			MatchChecker.expectPhoneMatch(matches[6], '11111111', 93);
 			expect(matches[0].plusSign).toBe(false);
 			expect(matches[1].plusSign).toBe(true);
 			expect(matches[2].plusSign).toBe(true);
@@ -108,6 +108,11 @@ describe("Autolinker.matcher.Phone", function () {
 			expect(matches[4].plusSign).toBe(false);
 			expect(matches[5].plusSign).toBe(true);
 			expect(matches[6].plusSign).toBe(false);
+		});
+
+		it('Exclude from excludeRegexps', function () {
+			var matched = matcher.parseMatches('1234/5567 and 911111111');
+			expect(matched.length).toBe(0);
 		});
 	});
 
