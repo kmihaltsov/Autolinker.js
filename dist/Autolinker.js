@@ -1,11 +1,11 @@
 /*!
  * Autolinker.js
- * 1.6.0
+ * 1.0.0
  *
  * Copyright(c) 2017 Gregory Jacobs <greg@greg-jacobs.com>
  * MIT License
  *
- * https://github.com/gregjacobs/Autolinker.js
+ * https://github.com/kmihaltsov/Autolinker.js
  */
 ;(function(root, factory) {
   if (typeof define === 'function' && define.amd) {
@@ -241,7 +241,7 @@ Autolinker.parse = function( textOrHtml, options ) {
  *
  * Ex: 0.25.1
  */
-Autolinker.version = '1.6.0';
+Autolinker.version = '1.0.0';
 
 
 Autolinker.prototype = {
